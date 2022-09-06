@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { withSession } from './../lib/session'
 import styles from '../styles/Home.module.css'
+import { wrapper } from './../store'
 
 const Home: NextPage = (props) => {
   console.log('props', props)
@@ -71,12 +72,14 @@ const Home: NextPage = (props) => {
   )
 }
 
-export const getServerSideProps = withSession(async params => {
-  return {
-    props: {
-      noteId: 2
+export const getServerSideProps = wrapper.getServerSideProps(
+  store => withSession(async params => {
+    return {
+      props: {
+        noteId: 2
+      }
     }
-  }
-})
+  })
+)
 
 export default Home
