@@ -44,7 +44,7 @@ interface GetPropsParams {
   authTokens: AuthTokensType
 }
 
-export const withSession = <T>(
+export const withSession = <T extends { [key: string]: any }>(
   getProps?: (params: GetPropsParams) => Promise<GetServerSidePropsResult<T>>
 ): GetServerSideProps<T> => {
   const getServerSideProps: GetServerSideProps<T> = async (context) => {

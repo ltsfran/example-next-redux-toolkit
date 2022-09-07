@@ -1,12 +1,17 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { withSession } from './../lib/session'
-import styles from '../styles/Home.module.css'
 import { wrapper } from './../store'
+import { withSession } from './../lib/session'
+import { useAppSelector } from '../hooks'
+import styles from '../styles/Home.module.css'
+import { fetchUsers } from '../store/users.slice'
 
 const Home: NextPage = (props) => {
-  console.log('props', props)
+  const { errorMessage, entities } = useAppSelector(state => state.users)
+
+  console.log(entities, 'entities')
+
   return (
     <div className={styles.container}>
       <Head>
@@ -19,6 +24,7 @@ const Home: NextPage = (props) => {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
+        <div>{errorMessage}</div>
 
         <p className={styles.description}>
           Get started by editing{' '}
@@ -74,6 +80,7 @@ const Home: NextPage = (props) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   store => withSession(async params => {
+    await store.dispatch(fetchUsers())
     return {
       props: {
         noteId: 2

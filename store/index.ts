@@ -8,9 +8,11 @@ import {
 } from '@reduxjs/toolkit'
 import { createWrapper, HYDRATE } from 'next-redux-wrapper'
 import modal from './modal.slice'
+import users from './users.slice'
 
 const combinedReducer = combineReducers({
-  modal
+  modal,
+  users
 })
 
 const reducer: typeof combinedReducer = (state, action) => {
