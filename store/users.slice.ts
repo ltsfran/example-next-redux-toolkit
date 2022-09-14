@@ -6,19 +6,25 @@ import {
 import UserService from '../services/user'
 import type { UserType } from '../services/user'
 
+interface ErrorField {
+  field: string
+  message: string
+  url?: string
+}
+
 interface State {
   status: 'idle' | 'loading' | 'success' | 'failure'
   entities: UserType[]
-  errorMessage: string
+  error: string | ErrorField[]
 }
 
 const initialState: State = {
   status: 'idle',
   entities: [],
-  errorMessage: ''
+  error: ''
 }
 
-export const fetchUsers = createAsyncThunk<UserType[], undefined, { rejectValue: string }>(
+export const fetchUsers = createAsyncThunk<UserType[], undefined, { rejectValue: string | ErrorField[] }>(
   'users/fetchUsersStatus',
   async (args, { rejectWithValue }) => {
     const { data, error } = await UserService.getAll()
@@ -34,16 +40,16 @@ const usersSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchUsers.pending, (state) => {
       state.status = 'loading'
-      state.errorMessage = ''
+      state.error = ''
     })
     builder.addCase(fetchUsers.fulfilled, (state, action: PayloadAction<UserType[]>) => {
       state.status = 'success'
       state.entities = action.payload
-      state.errorMessage = ''
+      state.error = ''
     })
     builder.addCase(fetchUsers.rejected, (state, action) => {
       state.status = 'failure'
-      state.errorMessage = action.payload !== undefined
+      state.error = action.payload !== undefined
         ? action.payload
         : 'Rejected'
     })

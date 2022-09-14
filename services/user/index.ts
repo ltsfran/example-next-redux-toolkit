@@ -1,22 +1,12 @@
+import type { GraphqlInstance } from '../../shared'
+
 export interface UserType {
   name: string
   age: number
 }
 
-interface ResponseSuccess {
-  data: UserType[]
-  error: undefined
-}
-
-interface ResponseError {
-  data: undefined
-  error: string
-}
-
-type Response = ResponseSuccess | ResponseError
-
 const UserService = {
-  async getAll (): Promise<Response> {
+  async getAll (): Promise<GraphqlInstance<UserType[]>> {
     try {
       const response = await fetch('http://localhost:3000/api/users')
       const data = await response.json()
